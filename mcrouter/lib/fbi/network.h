@@ -10,6 +10,10 @@
 #include <netinet/in.h>
 #include <stdbool.h>
 
+#ifndef s6_addr32
+  #define s6_addr32 __u6_addr.__u6_addr32
+#endif
+
 __BEGIN_DECLS
 
 typedef struct {
