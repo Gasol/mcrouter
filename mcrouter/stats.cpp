@@ -487,7 +487,7 @@ void prepare_stats(CarbonRouterInstanceBase& router, stat_t* stats) {
         pr->fiberManager().fibersAllocated();
     stats[fibers_pool_size_stat].data.uint64 +=
         pr->fiberManager().fibersPoolSize();
-    stats[fibers_stack_high_watermark_stat].data.uint64 = std::max(
+    stats[fibers_stack_high_watermark_stat].data.uint64 = std::max<int>(
         stats[fibers_stack_high_watermark_stat].data.uint64,
         pr->fiberManager().stackHighWatermark());
     stats[duration_us_stat].data.dbl += pr->stats().durationUs().value();
