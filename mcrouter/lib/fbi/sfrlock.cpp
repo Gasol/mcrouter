@@ -8,7 +8,7 @@
 #include "sfrlock.h"
 
 #include <limits.h>
-#include <linux/futex.h>
+#include <folly/detail/Futex.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
@@ -31,8 +31,8 @@ void sfrlock_rdlock_contended(sfrlock_t *l) {
 
     /* Wait for the write lock to be released. */
     while (oldv & SFRLOCK_WRITE_LOCKED) {
-      syscall(SYS_futex, &l->value, FUTEX_WAIT | FUTEX_PRIVATE_FLAG, oldv,
-              NULL, NULL, 0);
+      folly::detail::Futex<std::atomic> f(l->value);
+      f.futexWait(oldv);
       oldv = ACCESS_ONCE(l->value);
     }
 
@@ -44,8 +44,8 @@ void sfrlock_rdlock_contended(sfrlock_t *l) {
 }
 
 void sfrlock_wake_waiters(sfrlock_t *l) {
-  syscall(SYS_futex, &l->value, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, INT_MAX,
-          NULL, NULL, 0);
+  folly::detail::Futex<std::atomic> f(l->value);
+  f.futexWake();
 }
 
 void sfrlock_wrlock_contended(sfrlock_t *l) {
@@ -66,8 +66,8 @@ void sfrlock_wrlock_contended(sfrlock_t *l) {
 
     /* Wait for the write lock to be released. */
     while (oldv & SFRLOCK_WRITE_LOCKED) {
-      syscall(SYS_futex, &l->value, FUTEX_WAIT | FUTEX_PRIVATE_FLAG, oldv,
-              NULL, NULL, 0);
+      folly::detail::Futex<std::atomic> f(l->value);
+      f.futexWait(oldv);
       oldv = ACCESS_ONCE(l->value);
     }
 
@@ -82,8 +82,8 @@ void sfrlock_wrlock_contended(sfrlock_t *l) {
    */
   oldv |= SFRLOCK_WRITE_LOCKED;
   while (oldv != SFRLOCK_WRITE_LOCKED) {
-    syscall(SYS_futex, &l->value, FUTEX_WAIT | FUTEX_PRIVATE_FLAG, oldv,
-            NULL, NULL, 0);
+    folly::detail::Futex<std::atomic> f(l->value);
+    f.futexWait(oldv);
     oldv = ACCESS_ONCE(l->value);
   }
 
