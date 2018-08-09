@@ -922,24 +922,6 @@ void AsyncMcClientImpl::updateWriteTimeout(std::chrono::milliseconds timeout) {
 }
 
 double AsyncMcClientImpl::getRetransmissionInfo() {
-  if (socket_ != nullptr) {
-    struct tcp_info tcpinfo;
-    socklen_t len = sizeof(struct tcp_info);
-
-    auto& socket = dynamic_cast<folly::AsyncSocket&>(*socket_);
-
-    if (socket.getSockOpt(IPPROTO_TCP, TCP_INFO, &tcpinfo, &len) == 0) {
-      const uint64_t totalKBytes = socket.getRawBytesWritten() / 1000;
-      if (totalKBytes == lastKBytes_) {
-        return 0.0;
-      }
-      const auto retransPerKByte = (tcpinfo.tcpi_total_retrans - lastRetrans_) /
-          (double)(totalKBytes - lastKBytes_);
-      lastKBytes_ = totalKBytes;
-      lastRetrans_ = tcpinfo.tcpi_total_retrans;
-      return retransPerKByte;
-    }
-  }
   return -1.0;
 }
 } // memcache
