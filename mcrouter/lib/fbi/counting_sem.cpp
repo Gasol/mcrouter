@@ -8,7 +8,7 @@
 #include "counting_sem.h"
 
 #include <limits.h>
-#include <linux/futex.h>
+#include <folly/detail/Futex.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <sys/syscall.h>
@@ -17,12 +17,12 @@
 #include "mcrouter/lib/fbi/util.h"
 
 #define fbi_futex_wait(p, val)                                          \
-  syscall(SYS_futex, (p), FUTEX_WAIT | FUTEX_PRIVATE_FLAG, (val),       \
-          NULL, NULL, 0);
+  folly::detail::Futex<std::atomic> f(*p);                                      \
+  f.futexWait(val);
 
 #define fbi_futex_wake(p, n)                                            \
-  syscall(SYS_futex, (p), FUTEX_WAKE | FUTEX_PRIVATE_FLAG, (n),         \
-          NULL, NULL, 0);
+  folly::detail::Futex<std::atomic> f(*p);                                      \
+  f.futexWake(n);
 
 #define MIN(a, b) ((a) <= (b) ? (a) : (b))
 #define MAX(a, b) ((a) >= (b) ? (a) : (b))
