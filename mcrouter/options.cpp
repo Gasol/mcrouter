@@ -117,7 +117,7 @@ bool tryToString(const boost::any& value, string& res) {
 
 string toString(const boost::any& value) {
   string res;
-  bool ok = tryToString<int64_t>(value, res) || tryToString<int>(value, res) ||
+  bool ok = tryToString<uint64_t>(value, res) || tryToString<int64_t>(value, res) || tryToString<int>(value, res) ||
       tryToString<uint32_t>(value, res) || tryToString<size_t>(value, res) ||
       tryToString<unsigned int>(value, res) ||
       tryToString<double>(value, res) || tryToString<bool>(value, res) ||
