@@ -169,7 +169,6 @@ class MessageQueue {
         handler_(*this),
         notifyCallback_(std::move(notifyCallback)) {
     efd_ = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK | EFD_SEMAPHORE);
-    PCHECK(efd_ >= 0);
   }
 
   /**
