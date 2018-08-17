@@ -1,0 +1,6 @@
+{
+    "standalone_options": {
+        "log_file": "/Users/gasolwu/var/log/mcrouter.log",
+        "ports": "5000"
+    }
+}

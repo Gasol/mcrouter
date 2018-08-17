@@ -1,0 +1,20 @@
+{
+   "pools": {
+      "general": {
+         "servers": [
+           "127.0.0.1:11211",
+           "127.0.0.1:11212",
+           "127.0.0.1:11213"
+         ]
+      }
+   },
+   "route": {
+     "type": "OperationSelectorRoute",
+     "operation_policies": {
+       "add": "AllSyncRoute|Pool|general",
+       "delete": "AllSyncRoute|Pool|general",
+       "get": "LatestRoute|Pool|general",
+       "set": "AllSyncRoute|Pool|general"
+     }
+   }
+ }

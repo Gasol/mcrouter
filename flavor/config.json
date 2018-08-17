@@ -1,0 +1,46 @@
+{
+  "pools": {
+    "A": {
+      "servers": [
+        "127.0.0.1:11211",
+        "127.0.0.1:11212",
+        "127.0.0.1:11213"
+      ]
+    },
+    "B": {
+      "servers": [
+        "127.0.0.1:11212",
+        "127.0.0.1:11213",
+        "127.0.0.1:11211"
+      ]
+    },
+    "C": {
+      "servers": [
+        "192.168.122.1:5003",
+        "192.168.122.1:5001",
+        "192.168.122.1:5002"
+      ]
+    }
+  },
+  "route": {
+    "type": "OperationSelectorRoute",
+    "default_policy": {
+      "type": "AllFastestRoute",
+      "children": [
+        "PoolRoute|A",
+        "PoolRoute|B",
+        "PoolRoute|C"
+      ]
+    },
+    "operation_policies": {
+      "get": {
+        "type": "MissFailoverRoute",
+        "children": [
+          "PoolRoute|A",
+          "PoolRoute|B",
+          "PoolRoute|C"
+        ]
+      }
+    }
+  }
+}

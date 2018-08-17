@@ -1,0 +1,7 @@
+{
+    "options": {
+        "config_file": "/Users/gasolwu/Code/mcrouter/flavor/config.json",
+	"config_dump_root": "/Users/gasolwu/var/mcrouter",
+	"async_spool": "/Users/gasolwu/var/spool/mcrouter"
+    }
+}
